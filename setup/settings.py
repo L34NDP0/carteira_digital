@@ -134,6 +134,29 @@ REST_FRAMEWORK = {
     ],
 }
 
+SIMPLE_JWT = {
+    'ACCESS_TOKEN_LIFETIME': timedelta(hours=1),  # Token de acesso dura 1 hora
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=7),  # Token de refresh dura 7 dias
+    'ROTATE_REFRESH_TOKENS': True,  # Gera um novo refresh token quando um novo access token é criado
+    'BLACKLIST_AFTER_ROTATION': True,  # Invalida o refresh token antigo após a rotação
+    'UPDATE_LAST_LOGIN': False,  # Não atualiza o último login do usuário
+
+    'ALGORITHM': 'HS256',  # Algoritmo de assinatura
+    'SIGNING_KEY': SECRET_KEY,
+    'VERIFYING_KEY': None,
+    'AUDIENCE': None,
+    'ISSUER': None,
+
+    'AUTH_HEADER_TYPES': ('Bearer',),  # Tipo de autenticação no header
+    'AUTH_HEADER_NAME': 'HTTP_AUTHORIZATION',
+    'USER_ID_FIELD': 'id',  # Campo usado para identificar o usuário
+    'USER_ID_CLAIM': 'user_id',
+
+    'AUTH_TOKEN_CLASSES': ('rest_framework_simplejwt.tokens.AccessToken',),
+    'TOKEN_TYPE_CLAIM': 'token_type',
+
+    'JTI_CLAIM': 'jti',
+}
 
 # Internationalization
 # https://docs.djangoproject.com/en/5.1/topics/i18n/

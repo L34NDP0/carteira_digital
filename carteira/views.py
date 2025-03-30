@@ -1,4 +1,5 @@
-from rest_framework import viewsets, status, filters
+from rest_framework import viewsets, status
+from django_filters import rest_framework as filters
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework.permissions import AllowAny
@@ -99,15 +100,28 @@ class CarteiraViewSet(viewsets.ReadOnlyModelViewSet):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
+
+class TransacaoFilter(filters.FilterSet):
+    data_inicio = filters.DateTimeFilter(field_name='realizado_em', lookup_expr='gte')
+    data_fim = filters.DateTimeFilter(field_name='realizado_em', lookup_expr='lte')
+    tipo = filters.ChoiceFilter(field_name='tipo_transacao', choices=Transacao.TIPOS_TRANSACAO)
+
+    class Meta:
+        model = Transacao
+        fields = ['tipo_transacao', 'realizado_em']
+
 class TransacaoViewSet(viewsets.ReadOnlyModelViewSet):
     serializer_class = TransacaoSerializer
     filter_backends = [DjangoFilterBackend]
-    filterset_fields = {
-        'criado_em': ['gte', 'lte'],
-    }
+    filterset_class = TransacaoFilter
+    ordering_fields = ['realizado_em', 'valor']
+    ordering = ['-realizado_em']  # Ordenação padrão
 
     def get_queryset(self):
         return Transacao.objects.filter(
             remetente=self.request.user
-        ).order_by('-criado_em')
+        ).order_by('-realizado_em')
+        
+        
+
 

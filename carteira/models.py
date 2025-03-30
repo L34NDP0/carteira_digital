@@ -44,7 +44,7 @@ class Transacao(models.Model):
         max_length=15,
         choices=TIPOS_TRANSACAO
     )
-    criado_em = models.DateTimeField(auto_now_add=True)
+    realizado_em = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
         return f"{self.tipo_transacao} - {self.remetente} para {self.destinatario}: R${self.valor}"
