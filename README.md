@@ -1,4 +1,4 @@
- # API de Carteira Digital
+# API de Carteira Digital
 
 Uma API RESTful robusta para gerenciamento de carteira digital, desenvolvida com Django REST Framework, permitindo transferências seguras e controle financeiro.
 
@@ -6,6 +6,7 @@ Uma API RESTful robusta para gerenciamento de carteira digital, desenvolvida com
 
 - **Gestão de Usuários**
   - Cadastro seguro de usuários
+  - Listagem de usuários (autenticado)
   - Criação automática de carteira digital
   - Autenticação via JWT (JSON Web Tokens)
 
@@ -20,6 +21,7 @@ Uma API RESTful robusta para gerenciamento de carteira digital, desenvolvida com
   - Validações de saldo e valores
   - Proteção contra saldo negativo
   - Autenticação obrigatória para operações
+  - Filtro de superusuários na listagem
 
 ## 🛠️ Tecnologias Utilizadas
 
@@ -27,67 +29,130 @@ Uma API RESTful robusta para gerenciamento de carteira digital, desenvolvida com
 - Django 5.1
 - Django REST Framework
 - PostgreSQL
-- JWT para autenticação e egurança
-- Pytest Testes automatizados
+- JWT para autenticação
+- Django Filter para filtros avançados
+- Pytest para testes automatizados
 
-## 📋 Endpoints Principais
+## 📋 Endpoints da API
 
 ### Autenticação
 ```http
 POST /api/token/
+{
+    "username": "seu_usuario",
+    "password": "sua_senha"
+}
+
 POST /api/token/refresh/
+{
+    "refresh": "seu_token_refresh"
+}
 ```
 
 ### Usuários
 ```http
+# Criar usuário (público)
 POST /api/usuarios/
+{
+    "username": "usuario1",
+    "email": "usuario1@email.com",
+    "password": "senha123"
+}
+
+# Listar usuários (requer autenticação)
+GET /api/usuarios/
 ```
 
 ### Carteira
 ```http
+# Consultar saldo (autenticado)
 GET /api/carteiras/
+
+# Realizar depósito (autenticado)
 POST /api/carteiras/deposito/
+{
+    "valor": "100.00"
+}
+
+# Realizar transferência (autenticado)
 POST /api/carteiras/transferencia/
+{
+    "destinatario_username": "usuario2",
+    "valor": "50.00"
+}
 ```
 
 ### Transações
 ```http
+# Listar transações (autenticado)
 GET /api/transacoes/
+
+# Filtrar por tipo
+GET /api/transacoes/?tipo=DEPOSITO
+
+# Filtrar por período
+GET /api/transacoes/?data_inicio=2024-01-01&data_fim=2024-12-31
 ```
 
-## 🔒 Segurança
+## 🔒 Segurança e Validações
 
-- Implementação de transações atômicas
-- Validações rigorosas de dados
-- Proteção contra race conditions
-- Testes de integração abrangentes
+- **Autenticação**
+  - JWT Token para autenticação segura
+  - Endpoints protegidos por autenticação
+  - Refresh token para renovação de sessão
+
+- **Transações**
+  - Transações atômicas (ACID)
+  - Validação de saldo suficiente
+  - Proteção contra valores negativos
+  - Valor mínimo de R$ 0,01
+
+- **Usuários**
+  - Senhas armazenadas com hash
+  - Filtragem de superusuários
+  - Validação de dados
 
 ## 🧪 Testes
 
-O projeto possui uma suíte completa de testes, incluindo:
-- Testes unitários
-- Testes de integração
-- Testes de modelos
-- Testes de API
+O projeto possui cobertura completa de testes, incluindo:
 
-Cobertura de testes superior a 90%.
+- **Testes de Usuários**
+  - Criação de usuário
+  - Listagem de usuários
+  - Validações de autenticação
+  - Filtragem de superusuários
+
+- **Testes de Carteira**
+  - Depósitos
+  - Transferências
+  - Validações de saldo
+  - Consistência de dados
+
+- **Testes de Transações**
+  - Registro de operações
+  - Filtros de consulta
+  - Validações de valores
+  - Integridade dos dados
 
 ## 💡 Diferenciais Técnicos
 
-1. **Arquitetura Robusta**
-   - Separação clara de responsabilidades
+1. **Arquitetura**
+   - Separação clara de responsabilidades (models, views, serializers)
    - Código modular e reutilizável
-   - Fácil manutenção e escalabilidade
-
-2. **Boas Práticas**
-   - Código limpo e bem documentado
-   - Seguindo princípios SOLID
    - Padrões REST
+   - Documentação clara
 
-3. **Performance**
+2. **Performance**
    - Queries otimizadas
-   - Uso eficiente do banco de dados
-   - Implementação de filtros e ordenação
+   - Select for update em transações
+   - Índices adequados
+   - Paginação de resultados
+
+3. **Manutenibilidade**
+   - Código bem documentado
+   - Testes automatizados
+   - Validações centralizadas
+   - Padrões de código consistentes
 
 ## 🚀 Como Executar
 
@@ -96,7 +161,8 @@ Cobertura de testes superior a 90%.
    ```bash
    pip install -r requirements.txt
    ```
-3. Configure as variáveis de ambiente
+3. Configure as variáveis de ambiente no .env:
+
 4. Execute as migrações:
    ```bash
    python manage.py migrate
@@ -135,15 +201,5 @@ POST /api/carteiras/transferencia/
 }
 ```
 
-## 👨‍💻 Desenvolvimento
 
-Este projeto foi desenvolvido com foco em:
-- Qualidade de código
-- Segurança
-- Escalabilidade
-- Manutenibilidade
-- Testes automatizados
 
-## 🤝 Contribuição
-
-O projeto segue as melhores práticas de desenvolvimento e está aberto a melhorias e sugestões.

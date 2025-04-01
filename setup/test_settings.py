@@ -1,6 +1,6 @@
 from .settings import *
 
-# Usar SQLite em memória para testes
+# Usa o SQLite em memória para testes
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
@@ -8,7 +8,7 @@ DATABASES = {
     }
 }
 
-# Desabilitar debug para testes
+# Desabilitado o debug para testes
 DEBUG = False
 
 # Chave secreta fixa para testes
