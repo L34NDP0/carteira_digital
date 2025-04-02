@@ -1,6 +1,6 @@
 # API de Carteira Digital
 
-Uma API RESTful robusta para gerenciamento de carteira digital, desenvolvida com Django REST Framework, permitindo transferências seguras e controle financeiro.
+Uma API RESTful robusta para gerenciamento de carteira digital, desenvolvida com Django REST Framework, permitindo transferências seguras e controle financeiro. 
 
 ## 🚀 Funcionalidades Principais
 
@@ -28,7 +28,7 @@ Uma API RESTful robusta para gerenciamento de carteira digital, desenvolvida com
 - Python 3.x
 - Django 5.1
 - Django REST Framework
-- PostgreSQL
+- PostgreSQL -- Banco de dados atualmente em nuvem porém pode ser alterado para o localhost
 - JWT para autenticação
 - Django Filter para filtros avançados
 - Pytest para testes automatizados
@@ -162,7 +162,10 @@ O projeto possui cobertura completa de testes, incluindo:
    pip install -r requirements.txt
    ```
 3. Configure as variáveis de ambiente no .env:
-
+  ```bash
+   python -m venv .venv
+  .venv\Scripts\activate
+  ```
 4. Execute as migrações:
    ```bash
    python manage.py migrate
